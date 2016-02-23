@@ -1,7 +1,7 @@
 /*
- * cordova-plugin-iosrtc v2.2.3-pre
+ * cordova-plugin-iosrtc v2.2.2
  * Cordova iOS plugin exposing the full WebRTC W3C JavaScript APIs
- * Copyright 2015-2016 Iñaki Baz Castillo at eFace2Face, inc. (https://eface2face.com)
+ * Copyright 2015 Iñaki Baz Castillo at eFace2Face, inc. (https://eface2face.com)
  * License MIT
  */
 
@@ -963,8 +963,8 @@ function RTCDataChannel(peerConnection, label, options, dataFromEvent) {
 	if (!dataFromEvent) {
 		debug('new() | [label:%o, options:%o]', label, options);
 
-		if (typeof label !== 'string') {
-			label = '';
+		if (!label || typeof label !== 'string') {
+			throw new Error('label argument required');
 		}
 
 		options = options || {};
@@ -2201,6 +2201,8 @@ module.exports = {
 
 	// Expose a function to refresh current videos rendering a MediaStream.
 	refreshVideos:         refreshVideos,
+		hideVideos:         hideVideos,
+		showVideos:         showVideos,
 
 	// Expose a function to handle a video not yet inserted in the DOM.
 	observeVideo:          videoElementsHandler.observeVideo,
@@ -2241,6 +2243,36 @@ function refreshVideos() {
 	}
 }
 
+function hideVideos() {
+	debug('hideVideos()');
+
+	var id;
+
+	for (id in mediaStreamRenderers) {
+		if (mediaStreamRenderers.hasOwnProperty(id)) {
+			if (mediaStreamRenderers[id])
+			{
+			mediaStreamRenderers[id].hide();
+			}
+			else
+			{
+				alert("dint find mediaStreamRenderers[id].hide()");
+			}
+		}
+	}
+}
+
+function showVideos() {
+	debug('showVideos()');
+
+	var id;
+
+	for (id in mediaStreamRenderers) {
+		if (mediaStreamRenderers.hasOwnProperty(id)) {
+			mediaStreamRenderers[id].show();
+		}
+	}
+}
 
 function selectAudioOutput(output) {
 	debug('selectAudioOutput() | [output:"%s"]', output);
@@ -2436,7 +2468,6 @@ var debug = require('debug')('iosrtc:videoElementsHandler'),
 
 				// If this video element was previously handling a MediaStreamRenderer, release it.
 				releaseMediaStreamRenderer(node);
-				delete node._iosrtcVideoHandled;
 			} else {
 				for (j = 0; j < node.childNodes.length; j++) {
 					childNode = node.childNodes.item(j);
@@ -3218,8 +3249,8 @@ void function(root){
   function generator(options){
     options = defaults(options)
     return function(min, max, integer){
-      options.min     = min != null ? min : options.min
-      options.max     = max != null ? max : options.max
+      options.min     = min     || options.min
+      options.max     = max     || options.max
       options.integer = integer != null ? integer : options.integer
       return random(options)
     }
@@ -3232,8 +3263,8 @@ void function(root){
 
 },{}],20:[function(require,module,exports){
 module.exports = {
-	EventTarget : require('./lib/EventTarget'),
-	Event       : require('./lib/Event')
+	EventTarget:  require('./lib/EventTarget'),
+	Event:        require('./lib/Event')
 };
 
 },{"./lib/Event":21,"./lib/EventTarget":22}],21:[function(require,module,exports){
@@ -3251,6 +3282,7 @@ module.exports = global.Event;
  */
 module.exports = _EventTarget;
 
+
 function _EventTarget() {
 	// Do nothing if called for a native EventTarget object..
 	if (typeof this.addEventListener === 'function') {
@@ -3264,6 +3296,7 @@ function _EventTarget() {
 	this.dispatchEvent = _dispatchEvent;
 }
 
+
 Object.defineProperties(_EventTarget.prototype, {
 	listeners: {
 		get: function () {
@@ -3272,9 +3305,9 @@ Object.defineProperties(_EventTarget.prototype, {
 	}
 });
 
+
 function _addEventListener(type, newListener) {
-	var
-		listenersType,
+	var listenersType,
 		i, listener;
 
 	if (!type || !newListener) {
@@ -3295,9 +3328,9 @@ function _addEventListener(type, newListener) {
 	listenersType.push(newListener);
 }
 
+
 function _removeEventListener(type, oldListener) {
-	var
-		listenersType,
+	var listenersType,
 		i, listener;
 
 	if (!type || !oldListener) {
@@ -3321,9 +3354,9 @@ function _removeEventListener(type, oldListener) {
 	}
 }
 
+
 function _dispatchEvent(event) {
-	var
-		type,
+	var type,
 		listenersType,
 		dummyListener,
 		stopImmediatePropagation = false,
@@ -3333,19 +3366,19 @@ function _dispatchEvent(event) {
 		throw new Error('`event` must have a valid `type` property');
 	}
 
-	// Do some stuff to emulate DOM Event behavior (just if this is not a
-	// DOM Event object)
-	if (event._yaeti) {
-		event.target = this;
-		event.cancelable = true;
+	if (event._dispatched) {
+		throw new Error('event already dispatched');
 	}
+	event._dispatched = true;
 
-	// Attempt to override the stopImmediatePropagation() method
-	try {
-		event.stopImmediatePropagation = function () {
-			stopImmediatePropagation = true;
-		};
-	} catch (error) {}
+	// Force the event to be cancelable.
+	event.cancelable = true;
+	event.target = this;
+
+	// Override stopImmediatePropagation() function.
+	event.stopImmediatePropagation = function () {
+		stopImmediatePropagation = true;
+	};
 
 	type = event.type;
 	listenersType = (this._listeners[type] || []);
