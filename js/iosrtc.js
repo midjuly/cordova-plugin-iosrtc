@@ -48,6 +48,8 @@ module.exports = {
 
 	// Expose a function to refresh current videos rendering a MediaStream.
 	refreshVideos:         refreshVideos,
+		hideVideos:         hideVideos,
+		showVideos:         showVideos,
 
 	// Expose a function to handle a video not yet inserted in the DOM.
 	observeVideo:          videoElementsHandler.observeVideo,
@@ -88,6 +90,29 @@ function refreshVideos() {
 	}
 }
 
+function hideVideos() {
+	debug('hideVideos()');
+
+	var id;
+
+	for (id in mediaStreamRenderers) {
+		if (mediaStreamRenderers.hasOwnProperty(id)) {
+			mediaStreamRenderers[id].hide();
+		}
+	}
+}
+
+function showVideos() {
+	debug('showVideos()');
+
+	var id;
+
+	for (id in mediaStreamRenderers) {
+		if (mediaStreamRenderers.hasOwnProperty(id)) {
+			mediaStreamRenderers[id].show();
+		}
+	}
+}
 
 function selectAudioOutput(output) {
 	debug('selectAudioOutput() | [output:"%s"]', output);

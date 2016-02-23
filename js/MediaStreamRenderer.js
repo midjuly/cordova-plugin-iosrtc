@@ -310,6 +310,17 @@ MediaStreamRenderer.prototype.close = function () {
 	exec(null, null, 'iosrtcPlugin', 'MediaStreamRenderer_close', [this.id]);
 };
 
+MediaStreamRenderer.prototype.hide = function () {
+	debug('hide()');
+
+	exec(null, null, 'iosrtcPlugin', 'MediaStreamRenderer_hide', [this.id]);
+};
+
+MediaStreamRenderer.prototype.show = function () {
+	debug('show()');
+
+	exec(null, null, 'iosrtcPlugin', 'MediaStreamRenderer_show', [this.id]);
+};
 
 /**
  * Private API.
