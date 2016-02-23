@@ -40,11 +40,6 @@ class PluginMediaStreamRenderer : NSObject, RTCEAGLVideoViewDelegate {
 	}
 
 
-	deinit {
-		NSLog("PluginMediaStreamRenderer#deinit()")
-	}
-
-
 	func run() {
 		NSLog("PluginMediaStreamRenderer#run()")
 
@@ -148,7 +143,7 @@ class PluginMediaStreamRenderer : NSObject, RTCEAGLVideoViewDelegate {
 		let clip = data.objectForKey("clip") as? Bool ?? true
 		let borderRadius = data.objectForKey("borderRadius") as? Float ?? 0
 
-		NSLog("PluginMediaStreamRenderer#refresh() [elementLeft:\(elementLeft), elementTop:\(elementTop), elementWidth:\(elementWidth), elementHeight:\(elementHeight), videoViewWidth:\(videoViewWidth), videoViewHeight:\(videoViewHeight), visible:\(visible), opacity:\(opacity), zIndex:\(zIndex), mirrored:\(mirrored), clip:\(clip), borderRadius:\(borderRadius)]")
+		NSLog("cccccccccc PluginMediaStreamRenderer#refresh() [elementLeft:\(elementLeft), elementTop:\(elementTop), elementWidth:\(elementWidth), elementHeight:\(elementHeight), videoViewWidth:\(videoViewWidth), videoViewHeight:\(videoViewHeight), visible:\(visible), opacity:\(opacity), zIndex:\(zIndex), mirrored:\(mirrored), clip:\(clip), borderRadius:\(borderRadius)]")
 
 		let videoViewLeft: Float = (elementWidth - videoViewWidth) / 2
 		let videoViewTop: Float = (elementHeight - videoViewHeight) / 2
@@ -200,6 +195,16 @@ class PluginMediaStreamRenderer : NSObject, RTCEAGLVideoViewDelegate {
 		self.elementView.layer.cornerRadius = CGFloat(borderRadius)
 	}
 
+
+	func hide() {
+		NSLog("PluginMediaStreamRenderer#hide()")
+		self.webView.sendSubviewToBack(self.elementView)
+	}
+
+	func show() {
+		NSLog("PluginMediaStreamRenderer#show()")
+		self.webView.bringSubviewToFront(self.elementView)
+	}
 
 	func close() {
 		NSLog("PluginMediaStreamRenderer#close()")
