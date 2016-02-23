@@ -761,6 +761,17 @@ MediaStreamRenderer.prototype.refresh = function () {
 	}
 };
 
+MediaStreamRenderer.prototype.hide = function () {
+	debug('hide()');
+
+	exec(null, null, 'iosrtcPlugin', 'MediaStreamRenderer_hide', [this.id]);
+};
+
+MediaStreamRenderer.prototype.show = function () {
+	debug('show()');
+
+	exec(null, null, 'iosrtcPlugin', 'MediaStreamRenderer_show', [this.id]);
+};
 
 MediaStreamRenderer.prototype.close = function () {
 	debug('close()');
@@ -2252,11 +2263,7 @@ function hideVideos() {
 		if (mediaStreamRenderers.hasOwnProperty(id)) {
 			if (mediaStreamRenderers[id])
 			{
-			mediaStreamRenderers[id].hide();
-			}
-			else
-			{
-				alert("dint find mediaStreamRenderers[id].hide()");
+				mediaStreamRenderers[id].hide();
 			}
 		}
 	}
