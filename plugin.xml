@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
 		id="cordova-plugin-iosrtc"
-		version="2.2.3-pre">
+		version="3.1.0">
 
 	<name>iosrtc</name>
 	<description>Cordova iOS plugin exposing the full WebRTC W3C JavaScript APIs</description>
@@ -18,10 +18,6 @@
 		<engine name="cordova-ios" version=">=3.8.0" />
 	</engines>
 
-	<js-module src="dist/cordova-plugin-iosrtc.js" name="Plugin">
-		<clobbers target="cordova.plugins.iosrtc" />
-	</js-module>
-
 	<platform name="ios">
 		<config-file target="config.xml" parent="/*">
 			<feature name="iosrtcPlugin">
@@ -30,11 +26,16 @@
 			</feature>
 		</config-file>
 
+		<js-module src="dist/cordova-plugin-iosrtc.js" name="Plugin">
+			<clobbers target="cordova.plugins.iosrtc" />
+		</js-module>
+
 		<!-- WebRTC ObjetiveC headers -->
 		<header-file src="src/webrtc-headers/RTCAVFoundationVideoSource.h" />
 		<header-file src="src/webrtc-headers/RTCAudioSource.h" />
 		<header-file src="src/webrtc-headers/RTCAudioTrack.h" />
 		<header-file src="src/webrtc-headers/RTCDataChannel.h" />
+		<header-file src="src/webrtc-headers/RTCDTMFSender.h" />
 		<header-file src="src/webrtc-headers/RTCEAGLVideoView.h" />
 		<header-file src="src/webrtc-headers/RTCFileLogger.h" />
 		<header-file src="src/webrtc-headers/RTCI420Frame.h" />
@@ -72,6 +73,7 @@
 		<source-file src="src/PluginRTCPeerConnectionConfig.swift" />
 		<source-file src="src/PluginRTCPeerConnectionConstraints.swift" />
 		<source-file src="src/PluginRTCDataChannel.swift" />
+		<source-file src="src/PluginRTCDTMFSender.swift" />
 		<source-file src="src/PluginMediaStream.swift" />
 		<source-file src="src/PluginMediaStreamTrack.swift" />
 		<source-file src="src/PluginGetUserMedia.swift" />
